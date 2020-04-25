@@ -54,7 +54,7 @@ jobs:
           tags: latest,${{needs.tag.version_bump.outputs.new_tag}}
           path: graalvm-maven-jdk11
 
-  gvmmvnj11:
+  gvmmvnj8:
     name: GraalVM Maven JDK8 Builder
     runs-on: ubuntu-latest
     needs: tag
