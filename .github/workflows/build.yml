@@ -8,6 +8,8 @@ jobs:
   tag:
     name: Create Tag & Release
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version_bump.outputs.new_tag }}
     steps:
       - uses: actions/checkout@master
       - id: version_bump
@@ -37,7 +39,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-vault
-          tags: latest,${{needs.tag.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.outputs.tag}}
           path: vault
 
   gvmmvnj11:
@@ -51,7 +53,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-graalvm-maven-jdk11
-          tags: latest,${{needs.tag.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.outputs.tag}}
           path: graalvm-maven-jdk11
 
   gvmmvnj8:
@@ -65,7 +67,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-graalvm-maven-jdk8
-          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.outputs.tag}}
           path: graalvm-maven-jdk8
 
   go14:
@@ -79,5 +81,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-graalvm-maven-go14
-          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.outputs.tag}}
           path: go-14
