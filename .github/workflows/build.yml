@@ -1,0 +1,50 @@
+name: Build & Release
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - id: version_bump
+        name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.17.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{steps.version_bump.outputs.new_tag}}
+          release_name: Release ${{steps.version_bump.outputs.new_tag}}
+      - name: Vault Builder
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: caladreas/jx-builder-vault
+          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          path: vault
+      - name: GraalMaven11 Builder
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: caladreas/jx-builder-graalvm-maven-jdk11
+          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          path: graalvm-maven-jdk11
+      - name: GraalMaven8 Builder
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: caladreas/jx-builder-graalvm-maven-jdk8
+          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          path: graalvm-maven-jdk8
