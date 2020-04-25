@@ -1,12 +1,12 @@
-name: Build & Release
+name: Build & Tag & Push
 on:
   push:
     branches:
       - master
 
 jobs:
-  build:
-    name: build
+  tag:
+    name: Create Tag & Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -24,23 +24,42 @@ jobs:
         with:
           tag_name: ${{steps.version_bump.outputs.new_tag}}
           release_name: Release ${{steps.version_bump.outputs.new_tag}}
+
+  vault:
+    name: Vault Builder
+    runs-on: ubuntu-latest
+    needs: tag
+    steps:
+      - uses: actions/checkout@master
       - name: Vault Builder
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-vault
-          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.version_bump.outputs.new_tag}}
           path: vault
-      - name: GraalMaven11 Builder
+
+  gvmmvnj11:
+    name: GraalVM Maven JDK11 Builder
+    runs-on: ubuntu-latest
+    needs: tag
+    steps:
+      - name: Build & Tag & Push
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: caladreas/jx-builder-graalvm-maven-jdk11
-          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          tags: latest,${{needs.tag.version_bump.outputs.new_tag}}
           path: graalvm-maven-jdk11
-      - name: GraalMaven8 Builder
+
+  gvmmvnj11:
+    name: GraalVM Maven JDK8 Builder
+    runs-on: ubuntu-latest
+    needs: tag
+    steps:
+      - name: Build & Tag & Push
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -48,3 +67,17 @@ jobs:
           repository: caladreas/jx-builder-graalvm-maven-jdk8
           tags: latest,${{steps.version_bump.outputs.new_tag}}
           path: graalvm-maven-jdk8
+
+  go14:
+    name: Go 14 Builder
+    runs-on: ubuntu-latest
+    needs: tag
+    steps:
+      - name: Build & Tag & Push
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: caladreas/jx-builder-graalvm-maven-go14
+          tags: latest,${{steps.version_bump.outputs.new_tag}}
+          path: go-14
