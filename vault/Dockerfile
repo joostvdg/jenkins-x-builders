@@ -2,7 +2,7 @@ FROM gcr.io/jenkinsxio/builder-base:0.0.80
 
 ENV VAULT_VERSION=1.3.4
 RUN wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
-RUN unzip vault${VAULT_VERSION}_linux_amd64.zip && chmod +x vault && mv vault /usr/bin &&  rm vault${VAULT_VERSION}_linux_amd64.zip
+RUN unzip vault_${VAULT_VERSION}_linux_amd64.zip && chmod +x vault && mv vault /usr/bin &&  rm vault_${VAULT_VERSION}_linux_amd64.zip
 RUN vault --version
 
 ENV JX_VERSION 2.1.10
