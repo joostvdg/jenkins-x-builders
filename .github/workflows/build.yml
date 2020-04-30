@@ -83,6 +83,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: caladreas/jx-builder-graalvm-maven-go14
+          repository: caladreas/jx-builder-go14
           tags: latest,${{needs.tag.outputs.tag}}
           path: go-14
