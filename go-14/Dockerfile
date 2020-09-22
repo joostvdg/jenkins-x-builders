@@ -1,4 +1,4 @@
-FROM gcr.io/jenkinsxio/builder-base:0.0.81
+FROM gcr.io/jenkinsxio/builder-base:0.0.83
 
 RUN curl -f -o /etc/yum.repos.d/vbatts-bazel-epel-7.repo  https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo \
   && yum install -y bazel \
@@ -65,7 +65,7 @@ RUN GO111MODULE=on go get github.com/cucumber/godog/cmd/godog && \
   go clean -cache -modcache && rm -rf $GOPATH/src/*
 
 # jx
-ENV JX_VERSION 2.1.30
+ENV JX_VERSION 2.1.149
 RUN curl -f -L https://github.com/jenkins-x/jx/releases/download/v${JX_VERSION}/jx-linux-amd64.tar.gz | tar xzv && \
   mv jx /usr/bin/
 

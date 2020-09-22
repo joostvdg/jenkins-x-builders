@@ -64,11 +64,11 @@ RUN GO111MODULE=on go get github.com/cucumber/godog/cmd/godog && \
     mv $GOPATH/bin/gotestsum /usr/local/ && \
     go clean -cache -modcache && rm -rf $GOPATH/src/*
 
-ENV NANCY_VERSION 0.3.1
-RUN curl -f -L https://github.com/sonatype-nexus-community/nancy/releases/download/v${NANCY_VERSION}/nancy-linux.386-v${NANCY_VERSION}.tar.gz | tar xzv && \
+ENV NANCY_VERSION 1.0.0
+RUN curl -f -L https://github.com/sonatype-nexus-community/nancy/releases/download/v${NANCY_VERSION}/nancy-linux.amd64-v${NANCY_VERSION}.tar.gz | tar xzv && \
     mv nancy /usr/bin/
 
-ENV JX_VERSION 2.1.107
+ENV JX_VERSION 2.1.149
 RUN curl -f -L https://github.com/jenkins-x/jx/releases/download/v${JX_VERSION}/jx-linux-amd64.tar.gz | tar xzv && \
     mv jx /usr/bin/
 
